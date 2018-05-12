@@ -9,9 +9,9 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 public class MyKafkaProducer {
 
-	public static void main(String[] args) {
+	public static void produce() {
 		  final String TOPIC = "test";
-		    final String BOOTSTRAP_SERVERS = "141.19.140.9:9092";
+		    final String BOOTSTRAP_SERVERS = "localhost:9092";
 
 		    Properties props = new Properties();
 	        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);

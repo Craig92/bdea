@@ -5,19 +5,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TermController {
-	
+
 	@GetMapping("/significallyTerm")
 	public String getSignifikantTerm() {
-		
-		//TODO
-		return "";
+
+		// TODO
+		return "Der signifikanteste Term lautet: ";
 	}
-	
-	@GetMapping("mostFrequentTerm")
+
+	@GetMapping("/mostFrequentTerm")
 	public String getMostFrequentTerm() {
-		
-		//TODO
-		return "";
+
+		// TODO
+		return "Der häufigste Term lautet: ";
 	}
 
 }

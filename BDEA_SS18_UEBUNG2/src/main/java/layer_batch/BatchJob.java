@@ -54,8 +54,8 @@ public class BatchJob {
 			job.setReducerClass(WholeWordCounterReducer.class);
 
 			job.setNumReduceTasks(numberOfReducer);
-			job.setOutputKeyClass(null);
-			job.setOutputValueClass(null);
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(IntWritable.class);
 
 			FileInputFormat.addInputPath(job, new Path(filename + "-temp"));
 			// TODO OutputFormat ==> NoSQL
