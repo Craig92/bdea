@@ -1,4 +1,4 @@
-package consumer;
+package puffer;
 
 import java.util.Collections;
 import java.util.Properties;

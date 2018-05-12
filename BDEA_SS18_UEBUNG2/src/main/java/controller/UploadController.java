@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,11 +11,25 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class UploadController {
 
-	@PostMapping("/upload")
-	public String handleFileUplaod(@RequestParam("file") MultipartFile file) throws IOException {
+	private int index = 1;
+	private String destinationPath = "src/main/resources/";
 
-		System.out.println(new String(file.getBytes()));
-		return "";
+	@PostMapping("/upload")
+	public String handleFileUplaod(@RequestParam("file") MultipartFile file) {
+
+		if (!file.isEmpty()) {
+			try {
+				File destination = new File(destinationPath + "file" + index);
+				file.transferTo(destination);
+				return "Erfolgreich gespeichert!";
+			} catch (IOException e) {
+				e.printStackTrace();
+				return "Fehler: Datei konnte nicht gespeichert werden!";
+			}
+		} else {
+			return "Fehler: Leere oder keine Datei übergeben!";
+		}
+
 	}
 
 }

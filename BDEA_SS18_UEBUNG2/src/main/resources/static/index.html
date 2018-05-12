@@ -1,6 +1,7 @@
 <html>
 <body>
 	BDEA Aufgabe 2
+	<br />
 	<br /> Wählen Sie eine Text-Datei (*.txt) von Ihrem Computer aus.
 	<br />
 	<form id="uploadbanner" enctype="multipart/form-data" method="post"
@@ -8,5 +9,20 @@
 		<input id="fileupload" name="file" type="file" accept="text/*" /> <input
 			type="submit" value="Hochladen" id="submit" />
 	</form>
+
+	<br /> Laden Sie eine oder mehrere Text-Dateien (*.txt) von Ihrem
+	Computer hoch, bevor Sie abfragen starten.
+	<br />
+	<br /> Abfrage: Signifikantester Term pro Dokument
+	<br />
+	<form id="signifikant" method="get" action="/significallyTerm">
+		<input type="submit" value="Abfrage" id="submit" />
+	</form>
+	<br /> Abfrage: Häufigster Term im Korpus
+	<br />
+	<form id="signifikant" method="get" action="/significallyTerm">
+		<input type="submit" value="Abfrage" id="submit" />
+	</form>
+
 </body>
 </html>
