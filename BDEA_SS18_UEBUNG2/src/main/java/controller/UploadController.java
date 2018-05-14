@@ -14,8 +14,15 @@ public class UploadController {
 	private int index = 1;
 	private String destinationPath = "src/main/resources/";
 
+	/**
+	 * Upload files and save the file in the resources directory
+	 * 
+	 * @param file
+	 *            the uploaded file
+	 * @return
+	 */
 	@PostMapping("/upload")
-	public String handleFileUplaod(@RequestParam("file") MultipartFile file) {
+	public String handleFileUpload(@RequestParam("file") MultipartFile file) {
 
 		if (!file.isEmpty()) {
 			try {
