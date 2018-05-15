@@ -11,6 +11,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import layer_serving.WholeWordCounterMapper;
 import layer_serving.WholeWordCounterReducer;
@@ -23,6 +24,7 @@ public class BatchJob extends TimerTask {
 
 	private static int numberOfReducer = 2;
 	private String hadoopHome = "C:\\Users\\Thorsten\\Entwicklung\\Bibliotheken\\Hadoop\\hadoop-2.8.3";
+	private String destinationPath = "C:/Users/Thorsten/Git/BDEA/BDEA_SS18_UEBUNG2/src/main/resources/";
 
 	public void batchJob(List<String> filenames) throws IOException, ClassNotFoundException, InterruptedException {
 
@@ -33,13 +35,14 @@ public class BatchJob extends TimerTask {
 
 		// Loescht temporaere Dateien
 		for (String filename : filenames) {
+
 			File file = new File(filename + "-temp");
 			if (file.exists()) {
-				file.delete();
+				FileUtils.deleteDirectory(file);
 			}
 			file = new File(filename + "-result");
 			if (file.exists()) {
-				file.delete();
+				FileUtils.deleteDirectory(file);
 			}
 		}
 
@@ -78,7 +81,7 @@ public class BatchJob extends TimerTask {
 
 			FileInputFormat.addInputPath(job, new Path(filename + "-temp"));
 			// TODO OutputFormat ==> NoSQL
-			FileOutputFormat.setOutputPath(job, new Path(filename + "result"));
+			FileOutputFormat.setOutputPath(job, new Path(filename + "-result"));
 			job.setOutputFormatClass(SequenceFileOutputFormat.class);
 			job.waitForCompletion(true);
 		}
@@ -105,7 +108,7 @@ public class BatchJob extends TimerTask {
 	 */
 	private List<String> getFiles() {
 
-		File directory = new File("/src/main/resources");
+		File directory = new File(destinationPath);
 		List<String> list = new ArrayList<>();
 
 		if (directory.isDirectory()) {
