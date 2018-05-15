@@ -2,18 +2,18 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import layer_batch.BatchJob;
+
 @RestController
 public class UploadController {
 
-	private int index = 1;
-	private String destinationPath = "C:/Users/Thorsten/Git/BDEA/BDEA_SS18_UEBUNG2/src/main/resources/";
-	
 	/**
 	 * Upload files and save the file in the resources directory
 	 * 
@@ -26,7 +26,7 @@ public class UploadController {
 
 		if (!file.isEmpty()) {
 			try {
-				File destination = new File(destinationPath + "file" + index);
+				File destination = new File(BatchJob.destinationPath + "file" + new Date().getTime());
 				file.transferTo(destination);
 				return "Erfolgreich gespeichert!";
 			} catch (IOException e) {

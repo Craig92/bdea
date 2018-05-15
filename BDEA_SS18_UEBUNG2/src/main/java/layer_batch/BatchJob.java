@@ -24,7 +24,7 @@ public class BatchJob extends TimerTask {
 
 	private static int numberOfReducer = 2;
 	private String hadoopHome = "C:\\Users\\Thorsten\\Entwicklung\\Bibliotheken\\Hadoop\\hadoop-2.8.3";
-	private String destinationPath = "C:/Users/Thorsten/Git/BDEA/BDEA_SS18_UEBUNG2/src/main/resources/";
+	public static String destinationPath = "C:/Users/Thorsten/Git/BDEA/BDEA_SS18_UEBUNG2/src/main/resources/";
 
 	public void batchJob(List<String> filenames) throws IOException, ClassNotFoundException, InterruptedException {
 
