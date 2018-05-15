@@ -105,7 +105,7 @@ public class BatchJob extends TimerTask {
 	 */
 	private List<String> getFiles() {
 
-		File directory = new File("./src/main/resources");
+		File directory = new File("/src/main/resources");
 		List<String> list = new ArrayList<>();
 
 		if (directory.isDirectory()) {
