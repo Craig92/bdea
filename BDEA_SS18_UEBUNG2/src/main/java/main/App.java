@@ -17,7 +17,7 @@ public class App {
 		Timer timer = new Timer();
 
 		// Start in 5 Minuten
-		timer.schedule(new BatchJob(), 300000);
+		timer.schedule(new BatchJob(), 3000);
 
 		// Start in einer Sekunde dann Ablauf alle 5 Minuten (300 Sekunden)
 		timer.schedule(new BatchJob(), 1000, 300000);
