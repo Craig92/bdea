@@ -1,13 +1,12 @@
 package puffer;
 
+import java.io.File;
 import java.util.Properties;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.web.multipart.MultipartFile;
-
 import main.App;
 
 public class MyKafkaProducer {
@@ -30,10 +29,11 @@ public class MyKafkaProducer {
 	 * 
 	 * @param file
 	 */
-	public void produce(MultipartFile file) {
+	public void produce(File file) {
 
 		Producer<String, String> producer = new KafkaProducer<String, String>(props);
-		ProducerRecord<String, String> rec = new ProducerRecord<String, String>(App.TOPIC, file.getName());
+		ProducerRecord<String, String> rec = new ProducerRecord<String, String>(App.TOPIC, file.getAbsolutePath());
+		System.out.printf("Producer Record:(%d, %s)\n", rec.key(), rec.value());
 		producer.send(rec);
 		producer.close();
 

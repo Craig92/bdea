@@ -5,9 +5,9 @@ import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.springframework.web.multipart.MultipartFile;
 
 import main.App;
 
@@ -28,23 +28,30 @@ public class MyKafkaConsumer {
 
 	/**
 	 * 
+	 * @return
+	 * @return
 	 * @throws InterruptedException
 	 */
-	public void consume() throws InterruptedException {
+	public String consume() throws InterruptedException {
 
+		String result = null;
 		Consumer<String, String> consumer = new KafkaConsumer<String, String>(props);
 		consumer.subscribe(Collections.singletonList(App.TOPIC));
 
-		ConsumerRecords<String, String> consumerRecords = consumer.poll(100);
-		consumerRecords.forEach(record -> {
-			System.out.printf("Consumer Record:(%d, %s, %d, %d)\n", record.key(), record.value(), record.partition(),
-					record.offset());
-		});
-		consumer.commitAsync();
-		Thread.sleep(500);
+		ConsumerRecords<String, String> consumerRecords = null;
 
+		while (result == null) {
+			consumerRecords = consumer.poll(100);
+			for (ConsumerRecord<String, String> record : consumerRecords) {
+				result = record.value();
+				System.out.printf("Consumer Record:(%d, %s, %d, %d)\n", record.key(), record.value(),
+						record.partition(), record.offset());
+			}
+			consumer.commitAsync();
+			Thread.sleep(500);
+		}
 		consumer.close();
-
+		return result;
 	}
 
 }

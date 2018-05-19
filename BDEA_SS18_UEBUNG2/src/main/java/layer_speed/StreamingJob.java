@@ -9,9 +9,8 @@ public class StreamingJob {
 	public void streamingJob() {
 
 		try {
-			consumer.consume();
+			System.out.println("Result: " + consumer.consume());
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// TODO
