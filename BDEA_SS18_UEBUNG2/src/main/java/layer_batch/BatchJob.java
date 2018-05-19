@@ -13,6 +13,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
+import main.App;
+
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -21,25 +23,30 @@ public class BatchJob extends TimerTask {
 
 	private static int numberOfReducer = 2;
 	private String hadoopHome = "C:\\Users\\Thorsten\\Entwicklung\\Bibliotheken\\Hadoop\\hadoop-2.8.3";
-	public static String destinationPath = "C:/Users/Thorsten/Git/BDEA/BDEA_SS18_UEBUNG2/src/main/resources/uploads";
 
+	/**
+	 * Counting the document frequencies using hadoop
+	 * 
+	 * @param filenames
+	 *            the path of the files
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws InterruptedException
+	 */
 	public void batchJob(List<String> filenames) throws IOException, ClassNotFoundException, InterruptedException {
 
 		System.setProperty("hadoop.home.dir", hadoopHome);
 
-		Configuration conf = null;
-		Job job = null;
-
 		// Loescht temporaere Dateien
-		File file = new File(destinationPath + "-df-result");
+		File file = new File(App.destinationPath + "-df-result");
 		if (file.exists()) {
 			FileUtils.deleteDirectory(file);
 		}
 
 		// Zaehlt jedes Wort einmalig pro Dokument
+		Configuration conf = new Configuration();
+		Job job = Job.getInstance(conf, "df counting");
 
-		conf = new Configuration();
-		job = Job.getInstance(conf, "df counting");
 		job.setJarByClass(BatchJob.class);
 		job.setMapperClass(DocumentWordCounterMapper.class);
 		job.setCombinerClass(DocumentWordCounterReducer.class);
@@ -49,11 +56,10 @@ public class BatchJob extends TimerTask {
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 
-		FileInputFormat.addInputPath(job, new Path(destinationPath));
-		FileOutputFormat.setOutputPath(job, new Path(destinationPath + "-df-result"));
+		FileInputFormat.addInputPath(job, new Path(App.destinationPath));
+		FileOutputFormat.setOutputPath(job, new Path(App.destinationPath + "-df-result"));
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.waitForCompletion(true);
-
 	}
 
 	@Override
@@ -64,20 +70,18 @@ public class BatchJob extends TimerTask {
 				batchJob(files);
 			}
 		} catch (ClassNotFoundException | IOException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
-	 * Get the uploaded files from the resorces directory
+	 * Get the uploaded files from the resources directory
 	 * 
-	 * @return a list with the filepaths
+	 * @return a list with the path of the files
 	 */
 	private List<String> getFiles() {
 
-		File directory = new File(destinationPath);
+		File directory = new File(App.destinationPath);
 		List<String> list = new ArrayList<>();
 
 		if (directory.isDirectory()) {
@@ -88,7 +92,7 @@ public class BatchJob extends TimerTask {
 			}
 			return list;
 		} else {
-			return new ArrayList<>();
+			return list;
 		}
 	}
 }

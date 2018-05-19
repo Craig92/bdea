@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import layer_batch.BatchJob;
+import layer_speed.StreamingJob;
+import main.App;
+import puffer.MyKafkaProducer;
 
 @RestController
 public class UploadController {
+
+	private MyKafkaProducer producer = new MyKafkaProducer();
 
 	/**
 	 * Upload files and save the file in the resources directory
@@ -26,8 +30,10 @@ public class UploadController {
 
 		if (!file.isEmpty()) {
 			try {
-				File destination = new File(BatchJob.destinationPath + "file" + new Date().getTime());
+				File destination = new File(App.destinationPath + "/file" + new Date().getTime() + ".txt");
 				file.transferTo(destination);
+				producer.produce(file);
+				new StreamingJob().streamingJob();
 				return "Erfolgreich gespeichert!";
 			} catch (IOException e) {
 				e.printStackTrace();

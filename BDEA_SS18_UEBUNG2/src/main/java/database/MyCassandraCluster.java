@@ -9,7 +9,7 @@ public class MyCassandraCluster {
 	private Cluster cluster;
 
 	MyCassandraCluster() {
-		cluster = Cluster.builder().addContactPoint(" hoppy.informatik.hs-mannheim.de ").withPort(9042).build();
+		cluster = Cluster.builder().addContactPoint("hoppy.informatik.hs-mannheim.de").withPort(9042).build();
 	}
 
 	public void writeDFIntoDatabase() {
