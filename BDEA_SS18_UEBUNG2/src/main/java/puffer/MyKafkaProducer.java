@@ -8,6 +8,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import main.App;
+import main.MyFileReader;
 
 public class MyKafkaProducer {
 
@@ -31,11 +32,16 @@ public class MyKafkaProducer {
 	 */
 	public void produce(File file) {
 
-		Producer<String, String> producer = new KafkaProducer<String, String>(props);
-		ProducerRecord<String, String> rec = new ProducerRecord<String, String>(App.TOPIC, file.getAbsolutePath());
-		System.out.printf("Producer Record:(%d, %s)\n", rec.key(), rec.value());
-		producer.send(rec);
-		producer.close();
+		try {
+			Producer<String, String> producer = new KafkaProducer<String, String>(props);
+			ProducerRecord<String, String> rec = new ProducerRecord<String, String>(App.TOPIC,
+					MyFileReader.readFileForKafka(file));
+			System.out.printf("Producer Record:(%d, %s)\n", rec.key(), rec.value());
+			producer.send(rec);
+			producer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

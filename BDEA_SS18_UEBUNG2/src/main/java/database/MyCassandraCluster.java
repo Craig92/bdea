@@ -4,7 +4,6 @@ import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
-import com.sun.tools.javac.util.List;
 
 public class MyCassandraCluster {
 
@@ -16,25 +15,22 @@ public class MyCassandraCluster {
 
 	public void writeDFIntoDatabase(String word, int df) {
 		Session session = cluster.connect();
-		session.execute("INSERT INTO jweis.df (word,value) " 
-				+ "VALUES('" + word + "'," + df + ");");
-		
+		session.execute("INSERT INTO jweis.df (word,value) " + "VALUES('" + word + "'," + df + ");");
+
 		session.close();
 	}
 
 	public void writeTFIntoDatabase(String word, int tf) {
 		Session session = cluster.connect();
-		session.execute("INSERT INTO jweis.tf (word,value) " 
-				+ "VALUES('" + word + "'," + tf + ");");
-		
+		session.execute("INSERT INTO jweis.tf (word,value) " + "VALUES('" + word + "'," + tf + ");");
+
 		session.close();
 	}
 
 	public int readDFFromDatabase(String word) {
 		int ret = 0;
 		Session session = cluster.connect();
-		ResultSet results = session.execute("SELECT * FROM jweis.df " 
-				+ "where word = '" + word + "';");
+		ResultSet results = session.execute("SELECT * FROM jweis.df " + "where word = '" + word + "';");
 		session.close();
 		for (Row row : results) {
 			String number = row.toString().split(",")[1].split("]")[0];
@@ -47,8 +43,7 @@ public class MyCassandraCluster {
 	public int readTFFromDatabase(String word) {
 		int ret = 0;
 		Session session = cluster.connect();
-		ResultSet results = session.execute("SELECT * FROM jweis.tf " 
-				+ "where word = '" + word + "';");
+		ResultSet results = session.execute("SELECT * FROM jweis.tf " + "where word = '" + word + "';");
 		session.close();
 		for (Row row : results) {
 			String number = row.toString().split(",")[1].split("]")[0];
@@ -57,13 +52,5 @@ public class MyCassandraCluster {
 		}
 		return ret;
 	}
-
-	// TEST
-//	 public static void main(String[] args) {
-//	 MyCassandraCluster c = new MyCassandraCluster();
-//	 c.writeDFIntoDatabase("123", 123);
-//	 c.readDFFromDatabase("test");
-//	 c.readDFFromDatabase("123");
-//	 }
 
 }

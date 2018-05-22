@@ -13,7 +13,9 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
+import database.MyCassandraCluster;
 import main.App;
+import main.MyFileReader;
 
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -60,6 +62,19 @@ public class BatchJob extends TimerTask {
 		FileOutputFormat.setOutputPath(job, new Path(App.destinationPath + "-df-result"));
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.waitForCompletion(true);
+
+		// Speichert Ergebnisse in Datenbank
+		MyCassandraCluster cluster = new MyCassandraCluster();
+		List<String[]> list = new ArrayList<>();
+		for (File temp : new File(App.destinationPath + "-df-result").listFiles()) {
+			if (temp.getName().contains("part-r-") && !temp.getName().contains(".crc")) {
+				list = MyFileReader.readFileForExport(temp);
+				for (String[] array : list) {
+					cluster.writeDFIntoDatabase(array[0], Integer.parseInt(array[1]));
+				}
+			}
+		}
+
 	}
 
 	@Override
