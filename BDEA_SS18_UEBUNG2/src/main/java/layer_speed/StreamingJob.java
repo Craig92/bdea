@@ -9,7 +9,8 @@ public class StreamingJob {
 	public void streamingJob() {
 
 		try {
-			System.out.println("Result: " + consumer.consume());
+			String fileText = consumer.consume();
+			System.out.println("Text: " + fileText);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
