@@ -33,7 +33,7 @@ public class UploadController {
 				File destination = new File(App.destinationPath + "/file" + new Date().getTime() + ".txt");
 				file.transferTo(destination);
 				producer.produce(destination);
-				new StreamingJob().streamingJob();
+				new StreamingJob().streamingJob(destination.getName());
 				return "Erfolgreich gespeichert!";
 			} catch (IOException e) {
 				e.printStackTrace();

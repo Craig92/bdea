@@ -1,5 +1,11 @@
 package database;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
@@ -40,6 +46,24 @@ public class MyCassandraCluster {
 		return ret;
 	}
 
+	public Map<String, String> readDFFromDatabase() {
+		Map<String, String> map = new HashMap<>();
+		Session session = cluster.connect();
+		ResultSet results = session.execute("SELECT * FROM jweis.df;");
+		session.close();
+		for (Row row : results) {
+			String word = row.toString().split(",")[0];
+			String number = row.toString().split(",")[1].split("]")[0];
+			map.put(word.substring(4, word.length()), number);
+		}
+
+		// Sortiert die Map
+		map = map.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+		return map;
+	}
+
 	public int readTFFromDatabase(String word) {
 		int ret = 0;
 		Session session = cluster.connect();
@@ -51,6 +75,24 @@ public class MyCassandraCluster {
 			System.out.println(ret);
 		}
 		return ret;
+	}
+
+	public Map<String, String> readTFFromDatabase() {
+		Map<String, String> map = new HashMap<>();
+		Session session = cluster.connect();
+		ResultSet results = session.execute("SELECT * FROM jweis.tf;");
+		session.close();
+		for (Row row : results) {
+			String word = row.toString().split(",")[0];
+			String number = row.toString().split(",")[1].split("]")[0];
+			map.put(word.substring(4, word.length()), number);
+		}
+
+		// Sortiert die Map
+		map = map.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+		return map;
 	}
 
 }
