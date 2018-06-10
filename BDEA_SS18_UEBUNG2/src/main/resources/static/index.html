@@ -2,7 +2,7 @@
 <body>
 	BDEA Aufgabe 2
 	<br />
-	<br /> Wählen Sie eine Text-Datei (*.txt) von Ihrem Computer aus.
+	<br /> Wï¿½hlen Sie eine Text-Datei (*.txt) von Ihrem Computer aus.
 	<br />
 	<form id="uploadbanner" enctype="multipart/form-data" method="post"
 		action="/upload">
@@ -18,9 +18,15 @@
 	<form id="signifikant" method="get" action="/significallyTerm">
 		<input type="submit" value="Abfrage" id="submit" />
 	</form>
-	<br /> Abfrage: Häufigster Term im Korpus
+	<br /> Abfrage: Hï¿½ufigster Term im Korpus
 	<br />
 	<form id="mostFrequentTerm" method="get" action="/mostFrequentTerm">
+		<input type="submit" value="Abfrage" id="submit" />
+	</form>
+	<br /> Abfrage: TFIDF
+	<br />
+	<form id="mostFrequentTerm" method="get" action="/tfidf">
+	 Dokument and Term: <input type="text" name="DandT"><br>
 		<input type="submit" value="Abfrage" id="submit" />
 	</form>
 

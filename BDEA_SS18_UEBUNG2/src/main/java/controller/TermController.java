@@ -17,7 +17,6 @@ public class TermController {
 
 	@GetMapping("/significallyTerm")
 	public String getSignifikantTerm() {
-
 		String result = "";
 		for (Entry<String, String> entry : cluster.readDFFromDatabase().entrySet()) {
 			result += "[" + entry.getKey() + " : " + entry.getValue() + "]\n";
@@ -27,7 +26,6 @@ public class TermController {
 
 	@GetMapping("/mostFrequentTerm")
 	public String getMostFrequentTerm() {
-
 		String result = "";
 		for (Entry<String, String> entry : cluster.readTFFromDatabase().entrySet()) {
 			result += "[" + entry.getKey() + " : " + entry.getValue() + "]\n";
@@ -36,13 +34,14 @@ public class TermController {
 	}
 
 	@GetMapping("/tfidf")
-	public String getMostFrequentTerm(@RequestParam("data") String tfName) {
-		System.out.println(tfName);
+	public String tfidf(@RequestParam("DandT") String dAndT) {
+		System.out.println(dAndT);
 		String result = "";
-		int tf = cluster.readTFFromDatabase(tfName);
-		int df = cluster.readDFFromDatabase(tfName.split(" ")[1]);
+		int tf = cluster.readTFFromDatabase(dAndT);
+		int df = cluster.readDFFromDatabase(dAndT.split(" ")[1]);
 		if(df == 0)
 			df = 1;
+		//TODO  N = Dokumentenanzahl
 		double tfid = tf * Math.log(10 / df);
 		return result + tfid;
 	}
