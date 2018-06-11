@@ -62,4 +62,21 @@ public class MyFileReader {
 			br.close();
 		}
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public static int getNumberOfFiles() {
+
+		int numbers = 0;
+		File uploadDirectory = new File(App.destinationPath);
+
+		for (File file : uploadDirectory.listFiles()) {
+			if (file.isFile()) {
+				numbers++;
+			}
+		}
+		return numbers;
+	}
 }

@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.datastax.driver.mapping.annotations.Param;
-
 import database.MyCassandraCluster;
+import main.MyFileReader;
 
 @RestController
 public class TermController {
@@ -35,14 +34,15 @@ public class TermController {
 
 	@GetMapping("/tfidf")
 	public String tfidf(@RequestParam("DandT") String dAndT) {
-		System.out.println(dAndT);
+
 		String result = "";
 		int tf = cluster.readTFFromDatabase(dAndT);
 		int df = cluster.readDFFromDatabase(dAndT.split(" ")[1]);
-		if(df == 0)
+		if (df == 0) {
 			df = 1;
-		//TODO  N = Dokumentenanzahl
-		double tfid = tf * Math.log(10 / df);
+		}
+		int n = MyFileReader.getNumberOfFiles();
+		double tfid = tf * Math.log(n / df);
 		return result + tfid;
 	}
 

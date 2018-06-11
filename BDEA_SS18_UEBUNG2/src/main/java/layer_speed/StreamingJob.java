@@ -14,16 +14,16 @@ import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 
 import main.App;
 
+@SuppressWarnings("deprecation")
 public class StreamingJob {
 
+	/**
+	 * 
+	 * @param filename
+	 */
 	public void streamingJob(String filename) {
 
 		try {
-			// TODO
-			// MyCassandraCluster cluster = new MyCassandraCluster();
-			// MyKafkaConsumer consumer = new MyKafkaConsumer();
-			// String fileText = consumer.consume();
-			// fileText = fileText.replace("[^A-Za-z ]", "");
 
 			StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 			ParameterTool parameterTool = ParameterTool.fromSystemProperties();
@@ -33,10 +33,9 @@ public class StreamingJob {
 					.addSource(new FlinkKafkaConsumer011<>("jweis", new SimpleStringSchema(), props));
 
 			DataStream<Tuple2<String, Integer>> dataStream = messageStream
-					// .fromElements("sss")
-					// .socketTextStream(App.SERVERS.substring(0, App.SERVERS.length() - 5), 9092)
 
 					.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
+
 						/**
 						* 
 						*/
@@ -51,11 +50,7 @@ public class StreamingJob {
 							}
 						}
 					})
-					// .flatMap((String sentence, Collector<Tuple2<String, Integer>> out) -> {
-					// for (String word : sentence.split(" ")) {
-					// out.collect(new Tuple2<String, Integer>(word.replace("[^A-Za-z ]", ""), 1));
-					// }
-					// }).returns(String.class)
+
 					.keyBy(0).sum(1);
 
 			System.out.println("Ausgabe");
