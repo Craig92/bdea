@@ -22,6 +22,6 @@ public class App {
 		SpringApplication.run(App.class, args);
 
 		// Start in 5 Minuten, dann nach Ablauf alle 5 Minuten (300 Sekunden)
-		new Timer().schedule(new BatchJob(), 300000000, 300000000);
+		new Timer().schedule(new BatchJob(), 300, 300000000);
 	}
 }

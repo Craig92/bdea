@@ -63,8 +63,11 @@ public class BatchJob extends TimerTask {
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.waitForCompletion(true);
 
-		// Speichert Ergebnisse in Datenbank
 		MyCassandraCluster cluster = new MyCassandraCluster();
+		// Löscht die vorhandenen Einträge aus der Datenbank
+		cluster.deleteDTFromDatabase();
+		
+		// Speichert Ergebnisse in Datenbank
 		List<String[]> list = new ArrayList<>();
 		for (File temp : new File(App.destinationPath + "-df-result").listFiles()) {
 			if (temp.getName().contains("part-r-") && !temp.getName().contains(".crc")) {

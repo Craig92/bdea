@@ -64,6 +64,13 @@ public class MyCassandraCluster {
 		return map;
 	}
 
+	public void deleteDTFromDatabase() {
+
+		Session session = cluster.connect();
+		session.execute("TRUNCATE  jweis.df ;");
+		session.close();
+	}
+
 	public int readTFFromDatabase(String word) {
 		int ret = 0;
 		Session session = cluster.connect();
