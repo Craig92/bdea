@@ -3,6 +3,8 @@ package layer_speed;
 import java.util.Properties;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -32,32 +34,30 @@ public class StreamingJob {
 			DataStream<String> messageStream = env
 					.addSource(new FlinkKafkaConsumer011<>("jweis", new SimpleStringSchema(), props));
 
-			DataStream<Tuple2<String, Integer>> dataStream = messageStream
+			DataStream<Tuple1<String>> dataStream = messageStream
 
-					.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
-
-						/**
-						* 
-						*/
+					.flatMap(new FlatMapFunction<String, Tuple1<String>>() {
 						private static final long serialVersionUID = 1L;
 
 						@Override
-						public void flatMap(String line, Collector<Tuple2<String, Integer>> out) throws Exception {
-							String[] words = line.split("\\W+");
+						public void flatMap(String line, Collector<Tuple1<String>> out) throws Exception {
+							String[] words = line.replaceAll("[^a-zA-ZäöüÄÖÜß ]", "").split("\\s+");
 							for (String word : words) {
 								System.out.println(word);
-								out.collect(new Tuple2<String, Integer>(filename + " " + word.toLowerCase(), 1));
+								out.collect(new Tuple1<String>(filename + " " + word.toLowerCase()));
 							}
 						}
-					})
+					}).shuffle()
+			// ohne die shuffle FUnktion wird nur das erste Wort des Textes hinzugefügt
+			// mit Shuffle werden zumindest teile hinzugefügt und gezählt
 
-					.keyBy(0).sum(1);
+			// Zusatz für DF können wir .keyBy(0) verwenden
+			// bei diesem aufruf wird jedes wort 1 mal gezählt
+			;
 
-			System.out.println("Ausgabe");
 			dataStream.print();
-			CassandraSink.addSink(dataStream).setQuery("INSERT INTO jweis.tf(word, tf) values (?, ?);")
+			CassandraSink.addSink(dataStream).setQuery("UPDATE jweis.tf SET tf = tf + 1 WHERE word = ?;")
 					.setHost("hoppy.informatik.hs-mannheim.de", 9042).build();
-
 			env.execute();
 
 		} catch (Exception e) {
