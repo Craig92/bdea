@@ -10,30 +10,50 @@ public class HyperLogLog {
 	public void test() {
 		String[] test = new String[] { "1101100011100110", "1111100011001100", "0000110001100110", "1101100001111010" };
 		for (String input : test) {
-			buckets[getBucketNr(input)] = getNumberOfZero(input);
-			System.out.println("Bucket " + getBucketNr(input) + " : " + getNumberOfZero(input));
+			if (buckets[getBucketNr(input)] < getNumberOfZero(input)) {
+				buckets[getBucketNr(input)] = getNumberOfZero(input);
+				System.out.println("Bucket " + getBucketNr(input) + " : " + getNumberOfZero(input));
+			}
 		}
 
-		System.out.println("HyperLogLog: E = " + hyperLogLogFunction() / buckets.length + " %");
-		System.out.println("LogLog:      E = " + logLogFunction() / buckets.length + " %");
-
+		printResult(4);
 	}
 
 	public static void main(String args[]) {
 
+		int elements = 16394;
+		fillBuckets(elements);
+		printResult(elements);
+	}
+
+	/**
+	 * print the result
+	 */
+	public static void printResult(int numberOfElements) {
+		System.out.println("LogLog:      E = " + logLogFunction() + " | "
+				+ (((logLogFunction() / numberOfElements)) * 100) + " %");
+		System.out.println("HyperLogLog: E = " + hyperLogLogFunction() + " | "
+				+ (((hyperLogLogFunction() / numberOfElements)) * 100) + " %");
+
+	}
+
+	/**
+	 * Fill the buckets with random elements
+	 * 
+	 * @param numberOfElements
+	 *            the number of elements
+	 */
+	public static void fillBuckets(int numberOfElements) {
+
 		String input;
 
-		// befüllen der Buckets mit zufälligen Werten
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < numberOfElements; i++) {
 			input = generateRandomHash();
-			buckets[getBucketNr(input)] = getNumberOfZero(input);
-			System.out.println("Bucket " + getBucketNr(input) + " : " + getNumberOfZero(input));
+			if (buckets[getBucketNr(input)] < getNumberOfZero(input)) {
+				buckets[getBucketNr(input)] = getNumberOfZero(input);
+				System.out.println("Bucket " + getBucketNr(input) + " : " + getNumberOfZero(input));
+			}
 		}
-
-		// Ergebnisse
-		System.out.println("HyperLogLog: E = " + hyperLogLogFunction() / buckets.length + " %");
-		System.out.println("LogLog:      E = " + logLogFunction() / buckets.length + " %");
-
 	}
 
 	/**
@@ -44,7 +64,7 @@ public class HyperLogLog {
 	public static String generateRandomHash() {
 		String ret = "";
 		for (int i = 0; i < 16; i++) {
-			if (Math.random() >= 0.5)
+			if (Math.random() <= 0.5)
 				ret += "1";
 			else
 				ret += "0";
@@ -75,7 +95,7 @@ public class HyperLogLog {
 
 		int result = 0;
 		char letter;
-		for (int i = 6; i != 16; i++) {
+		for (int i = 5; i < hash.length(); i++) {
 			letter = hash.charAt(i);
 			if (letter == '1') {
 				return result;
@@ -101,7 +121,7 @@ public class HyperLogLog {
 			sum += Math.pow(2, -buckets[i]);
 		}
 
-		return (am * (m * m)) / sum;
+		return (am * m * m) / sum;
 
 	}
 
