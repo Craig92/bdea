@@ -7,6 +7,7 @@ import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.cassandra.CassandraSink;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 import org.apache.flink.util.Collector;
@@ -45,7 +46,7 @@ public class StreamingJob {
 								out.collect(new Tuple1<String>(filename + " " + word.toLowerCase()));
 							}
 						}
-					}).shuffle()
+					}).keyBy(0).timeWindowAll(Time.seconds(30)).sum(1);
 			// ohne die shuffle FUnktion wird nur das erste Wort des Textes hinzugefügt
 			// mit Shuffle werden zumindest teile hinzugefügt und gezählt
 
